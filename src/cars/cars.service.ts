@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { Car } from './entities/car.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class CarsService {
@@ -9,13 +10,12 @@ export class CarsService {
   private id: number = 1
   
   create(createCarDto: CreateCarDto) {
-    const newCar = {
-      id: this.id,
+    const newCar: Car = {
+      id: uuidv4(),
       brand: createCarDto.brand,
       model: createCarDto.model,
       year: createCarDto.year
-    }
-    this.id += this.id
+    };
 
     this.cars.push(newCar);
     return newCar;
@@ -25,16 +25,16 @@ export class CarsService {
     return this.cars;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     const car = this.cars.find(car => car.id === id)
 
     if(!car){
       throw new NotFoundException('Carro não existe')
-    }
-    return ;
+    } 
+    return car;
   }
 
-  update(id: number, updateCarDto: UpdateCarDto) {
+  update(id: string, updateCarDto: UpdateCarDto) {
     const car = this.cars.find(car => car.id === id)
 
     if(!car){
@@ -49,17 +49,14 @@ export class CarsService {
     }
   }
 
-  remove(id: number) {
-    const car = this.cars.find(car => car.id === id)
+  remove(id: string) {
+    const carIndex = this.cars.findIndex(car => car.id === id);
 
-    if(!car){
-      throw new NotFoundException('Carro não existe')
+    if (carIndex === -1) {
+      throw new NotFoundException('Carro não existe');
     }
 
-    if(car){
-      const index = this.cars.findIndex(car => car.id === id)
-      this.cars.splice(index, 1)
-      return;
-    }
+    this.cars.splice(carIndex, 1);
+    return;
   }
 }
