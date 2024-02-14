@@ -21,7 +21,7 @@ Para recuperar um carro específico pelo seu ID, envie uma requisição GET para
 
 Atualizar Carro
 Para atualizar um carro, envie uma requisição PUT para /cars/:id com o seguinte corpo JSON:
-```json
+
 {
   "marca": "string",
   "modelo": "string",
